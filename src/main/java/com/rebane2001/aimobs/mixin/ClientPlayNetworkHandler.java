@@ -11,11 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(net.minecraft.client.network.ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandler {
-	@Inject(method = "sendChatMessage", at = @At("HEAD"))
-	public void sendChatMessage(String message, CallbackInfo ci) {
-		if (!AIMobsConfig.config.enabled) return;
-		PlayerEntity player = MinecraftClient.getInstance().player;
-		if (player == null) return;
-		ActionHandler.replyToEntity(message, player);
-	}
+    @Inject(method = "sendChatMessage", at = @At("HEAD"))
+    public void sendChatMessage(String message, CallbackInfo ci) {
+        if (!AIMobsConfig.config.enabled) return;
+        PlayerEntity player = MinecraftClient.getInstance().player;
+        if (player != null) ActionHandler.replyToEntity(message, player);
+    }
 }

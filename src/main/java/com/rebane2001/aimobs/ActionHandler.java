@@ -10,13 +10,12 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
-import net.minecraft.registry.RegistryKey;
-// import net.minecraft.world.EntityView;
 import net.minecraft.world.biome.Biome;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,14 +33,17 @@ public class ActionHandler {
 
     // The waitMessage is the thing that goes '<Name> ...' before an actual response is received
     private static ChatHudLine.Visible waitMessage;
+
     private static List<ChatHudLine.Visible> getChatHudMessages() {
-        return ((ChatHudAccessor)MinecraftClient.getInstance().inGameHud.getChatHud()).getVisibleMessages();
+        return ((ChatHudAccessor) MinecraftClient.getInstance().inGameHud.getChatHud()).getVisibleMessages();
     }
+
     private static void showWaitMessage(String name) {
         if (waitMessage != null) getChatHudMessages().remove(waitMessage);
-        waitMessage = new ChatHudLine.Visible(MinecraftClient.getInstance().inGameHud.getTicks(), OrderedText.concat(OrderedText.styledForwardsVisitedString("<" + name + "> ", Style.EMPTY),OrderedText.styledForwardsVisitedString("...", Style.EMPTY.withColor(Formatting.GRAY))), null, true);
+        waitMessage = new ChatHudLine.Visible(MinecraftClient.getInstance().inGameHud.getTicks(), OrderedText.concat(OrderedText.styledForwardsVisitedString("<" + name + "> ", Style.EMPTY), OrderedText.styledForwardsVisitedString("...", Style.EMPTY.withColor(Formatting.GRAY))), null, true);
         getChatHudMessages().add(0, waitMessage);
     }
+
     private static void hideWaitMessage() {
         if (waitMessage != null) getChatHudMessages().remove(waitMessage);
         waitMessage = null;

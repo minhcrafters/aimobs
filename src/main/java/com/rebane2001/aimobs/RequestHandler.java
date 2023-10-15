@@ -10,21 +10,21 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-//import java.util.Objects;
-//import java.util.Objects;
 
 public class RequestHandler {
     private static class OpenAIRequest {
-        String model = "text-davinci-003";
-        String stop = "\"";
-        String prompt = "";
-        float temperature = 0.6f;
-        int max_tokens = 512;
+        String model;
+        String stop;
+        String prompt;
+        float temperature;
+        int max_tokens;
 
-        OpenAIRequest(String prompt, String model, float temperature) {
+        OpenAIRequest(String prompt, String model, int max_tokens, float temperature, String stop) {
             this.prompt = prompt;
             this.model = model;
+            this.max_tokens = max_tokens;
             this.temperature = temperature;
+            this.stop = stop;
         }
     }
 
@@ -32,6 +32,7 @@ public class RequestHandler {
         static class Choice {
             String text;
         }
+
         Choice[] choices;
     }
 
@@ -39,11 +40,11 @@ public class RequestHandler {
         if (prompt.length() > 4096) prompt = prompt.substring(prompt.length() - 4096);
         AIMobsMod.LOGGER.info("Prompt: " + prompt);
 
-        OpenAIRequest openAIRequest = new OpenAIRequest(prompt, AIMobsConfig.config.model, AIMobsConfig.config.temperature);
+        OpenAIRequest openAIRequest = new OpenAIRequest(prompt, AIMobsConfig.config.model, 512, AIMobsConfig.config.temperature, "\"");
         String data = new Gson().toJson(openAIRequest);
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpPost request = new HttpPost("https://api.openai.com/v1/completions");
+            HttpPost request = new HttpPost("https://api.pawan.krd/v1/completions");
             StringEntity params = new StringEntity(data, "UTF-8");
             request.addHeader("Content-Type", "application/json");
             request.addHeader("Authorization", "Bearer " + AIMobsConfig.config.apiKey);
