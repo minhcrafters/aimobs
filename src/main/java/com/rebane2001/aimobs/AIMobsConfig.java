@@ -12,9 +12,10 @@ public class AIMobsConfig {
     public static class Config {
         public boolean enabled = true;
         public String apiKey = "";
-        public String model = "text-davinci-003";
+        public String model = "pai-001-light-beta";
         public float temperature = 0.6f;
     }
+
     public static Config config;
 
     private static Path getConfigPath() {
@@ -30,11 +31,12 @@ public class AIMobsConfig {
             saveConfig();
         }
     }
+
     public static void saveConfig() {
         try (FileWriter writer = new FileWriter(getConfigPath().toFile())) {
             new Gson().toJson(config, writer);
         } catch (Exception e) {
-            e.printStackTrace();
+            AIMobsMod.LOGGER.error("Failed to save config", e);
         }
     }
 }

@@ -9,8 +9,8 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class AIMobsCommand {
 
@@ -27,13 +27,14 @@ public class AIMobsCommand {
                                 .executes(AIMobsCommand::setModel)
                         ))
                 .then(literal("settemp")
-                        .then(argument("temperature", FloatArgumentType.floatArg(0,1))
+                        .then(argument("temperature", FloatArgumentType.floatArg(0, 1))
                                 .executes(AIMobsCommand::setTemp)
                         ))
                 .then(literal("enable").executes(context -> setEnabled(context, true)))
                 .then(literal("disable").executes(context -> setEnabled(context, false)))
         );
     }
+
     public static int setEnabled(CommandContext<FabricClientCommandSource> context, boolean enabled) {
         AIMobsConfig.config.enabled = enabled;
         AIMobsConfig.saveConfig();
@@ -42,7 +43,7 @@ public class AIMobsCommand {
     }
 
     public static int status(CommandContext<FabricClientCommandSource> context) {
-        boolean hasKey = AIMobsConfig.config.apiKey.length() > 0;
+        boolean hasKey = !AIMobsConfig.config.apiKey.isEmpty();
         Text yes = Text.literal("Yes").formatted(Formatting.GREEN);
         Text no = Text.literal("No").formatted(Formatting.RED);
         Text helpText = Text.literal("")
@@ -71,9 +72,10 @@ public class AIMobsCommand {
         context.getSource().sendFeedback(helpText);
         return 1;
     }
+
     public static int setAPIKey(CommandContext<FabricClientCommandSource> context) {
         String apiKey = context.getArgument("key", String.class);
-        if (apiKey.length() > 0) {
+        if (!apiKey.isEmpty()) {
             AIMobsConfig.config.apiKey = apiKey;
             AIMobsConfig.saveConfig();
             context.getSource().sendFeedback(Text.of("API key set"));
@@ -81,9 +83,10 @@ public class AIMobsCommand {
         }
         return 0;
     }
+
     public static int setModel(CommandContext<FabricClientCommandSource> context) {
         String model = context.getArgument("model", String.class);
-        if (model.length() > 0) {
+        if (!model.isEmpty()) {
             AIMobsConfig.config.model = model;
             AIMobsConfig.saveConfig();
             context.getSource().sendFeedback(Text.of("Model set"));
@@ -91,6 +94,7 @@ public class AIMobsCommand {
         }
         return 0;
     }
+
     public static int setTemp(CommandContext<FabricClientCommandSource> context) {
         AIMobsConfig.config.temperature = context.getArgument("temperature", float.class);
         AIMobsConfig.saveConfig();
